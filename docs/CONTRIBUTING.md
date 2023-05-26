@@ -1,14 +1,14 @@
 # Contributing to Lion Of Graphs
 
-In this document you can find all the information that is relevant for you as a contributor or developer. Please make sure to be aware of this project policies.
+In this document you can find all the information that is relevant for you as a contributor or a developer. Please start by reading the project policies.
 
 ### Table of Contents
 
 <ol>
   <li><a href="#developing-methodology">Developing methodology</a></li>
+  <li><a href="#how-to-report-a-bug">How to report a bug?</a></li>
+  <li><a href="#how-to-suggest-a-feature">How to suggest a feature?</a></li>
   <li><a href="#looking-for-support">Looking for support?</a></li>
-  <li><a href="#how-to-report-a-bug">How to report a bug</a></li>
-  <li><a href="#how-to-suggest-a-feature">How to suggest a feature or enhancement</a></li>
   <li><a href="#code-of-conduct">Code of Conduct</a></li>
 </ol>
 
@@ -25,7 +25,7 @@ In this project, we adopt the [Trunk Based Development](https://trunkbaseddevelo
 
 The only exception in this work to this sort of development, is that release branches are not present, assuming the master is the latest and the truest form of the live application.
 
-**IMPORTANT**: every branch has to be merged through a **PULL REQUEST** and has to be approved by at **least** one developer, specifically, one member of the [codeowners](../CODEOWNERS). Branches shall be **squashed and merged** into a single meaningful commit.
+**IMPORTANT**: every branch has to be merged through a **PULL REQUEST** and has to be approved by at **least** one developer, specifically, one member of the [codeowners](../CODEOWNERS). Branches must be **squashed and merged** into a single meaningful commit.
 
 ### Branching Nomenclature:
 
@@ -43,9 +43,7 @@ Branch commits do not matter.
 
 🚧 *under construction* 🚧
 
-## Looking for support?
 
-🚧 *under construction* 🚧
 
 ## How to report a bug?
 
@@ -63,11 +61,16 @@ Here are a few tips for writing great bug reports:
 
 🚧 *under construction* 🚧
 
-## How to suggest a feature or enhancement
+## How to suggest a feature?
 
 [Open an issue](https://github.com/MrToino/lion-of-graphs/issues/new) which describes the feature you would like to see, why would you want it, how it should work, and other informations you consider relevant. Be as detailed as possible.
 
 🚧 *under construction* 🚧
+
+## Looking for support?
+
+🚧 *under construction* 🚧
+
 
 ## Code of Conduct
 
