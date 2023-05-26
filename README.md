@@ -7,7 +7,7 @@
 # Lion Of Graphs
 
 ![GitHub top language](https://img.shields.io/github/languages/top/LionOfGraphs/LOG?label=Python&style=flat&logo=Python)
-![GitHub last commit](https://img.shields.io/github/last-commit/LionOfGraphs/DocumLOGentation?label=Last%20Commit&style=flat)
+![GitHub last commit](https://img.shields.io/github/last-commit/LionOfGraphs/LOG?label=Last%20Commit&style=flat)
 ![GitHub](https://img.shields.io/github/license/LionOfGraphs/LOG?label=License&style=flat&color=orange)
 
 ### Table of Contents
@@ -52,9 +52,6 @@ This project was possible thanks to all our contributors.
 </a>
 <a href="https://github.com/MrToino">
     <img src="https://github.com/MrToino.png" width="70px;" style="border-radius:100%"/>
-</a>
-<a href="https://github.com/luisferreira32">
-    <img src="https://github.com/luisferreira32.png" width="70px;" style="border-radius:100%"/>
 </a>
 
 
