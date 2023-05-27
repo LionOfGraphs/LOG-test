@@ -1,8 +1,8 @@
-<!-- <div align="center">
+<div align="center">
   <a href="https://github.com/MrToino/lion-of-graphs">
-    <img src="assets/logo.v0.2.png" alt="Logo" height="200">
+    <img src="assets/logo_blue.png" alt="Logo" height="200">
   </a>
-</div> -->
+</div>
 
 # Lion Of Graphs
 
