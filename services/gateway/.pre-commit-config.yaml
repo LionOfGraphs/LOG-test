@@ -9,17 +9,12 @@ repos:
     -   id: debug-statements
     -   id: check-docstring-first
 
-# Black - code formatter
--   repo: https://github.com/psf/black
-    rev: 23.3.0
-    hooks:
-    -   id: black
-
 # Flake8 - analyses and lints the code
 -   repo: https://github.com/PyCQA/flake8
     rev: 6.0.0
     hooks:
     -   id: flake8
+        args: ['--ignore=E501']
 
 # Bandit - find security issues in code
 -   repo: https://github.com/PyCQA/bandit
@@ -44,3 +39,10 @@ repos:
     rev: v3.4.0
     hooks:
     -   id: pyupgrade
+
+# Black - code formatter
+-   repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+    -   id: black
+        language_version: python3.10.4
