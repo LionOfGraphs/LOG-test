@@ -2,16 +2,11 @@ import uvicorn
 from decouple import Csv, config
 from fastapi import FastAPI
 
-# from fastapi import Depends, FastAPI, HTTPException, status
-# from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-
 app = FastAPI()
 
 
-@app.get("/user/ms2")
-async def test():
-    # grpc client -> grpc server ms2
-    return {"hello": "hello"}
+# @app.post("/token")
+# def login_for_access_token():
 
 
 def run():
