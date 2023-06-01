@@ -1,3 +1,6 @@
+import grpc
+import users_pb2
+import users_pb2_grpc
 import uvicorn
 from decouple import Csv, config
 from fastapi import FastAPI
@@ -5,8 +8,14 @@ from fastapi import FastAPI
 app = FastAPI()
 
 
-# @app.post("/token")
-# def login_for_access_token():
+@app.get("/user/authenticate")
+def authenticate(username, password):
+    with grpc.insecure_channel("localhost:50051") as channel:
+        stub = users_pb2_grpc.UsersStub(channel=channel)
+        response = stub.AuthenticateUser(
+            users_pb2.UserAuthenticationRequest(username=username, password=password)
+        )
+        print(response)
 
 
 def run():

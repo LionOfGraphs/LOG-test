@@ -1,20 +1,20 @@
+from concurrent import futures
 from datetime import datetime, timedelta
 from typing import Annotated
 
-import uvicorn
-from decouple import Csv, config
-from fastapi import Depends, FastAPI, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+import grpc
+import users_pb2
+import users_pb2_grpc
+from decouple import config
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
-from models import Token, TokenData, User, UserInDB
+from models import TokenData, User, UserInDB
 from passlib.context import CryptContext
 
 SECRET_KEY = config("SECRET_KEY")
 ALGORITHM = config("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = config("ACCESS_TOKEN_EXPIRE_MINUTES", cast=int)
-
-
-app = FastAPI()
 
 
 fake_users_db = {
@@ -95,43 +95,59 @@ async def get_current_active_user(
     return current_user
 
 
-@app.post("/token", response_model=Token)
-async def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
-):
-    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
-    )
-    return {"access_token": access_token, "token_type": "bearer"}
+# @app.post("/token", response_model=Token)
+# async def login_for_access_token(
+#     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+# ):
+#     user = authenticate_user(fake_users_db, form_data.username, form_data.password)
+#     if not user:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Incorrect username or password",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+#     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+#     access_token = create_access_token(
+#         data={"sub": user.username}, expires_delta=access_token_expires
+#     )
+#     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@app.get("/users/me/", response_model=User)
-async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_active_user)]
-):
-    return current_user
+# @app.get("/users/me/", response_model=User)
+# async def read_users_me(
+#     current_user: Annotated[User, Depends(get_current_active_user)]
+# ):
+#     return current_user
 
 
-@app.get("/users/me/items/")
-async def read_own_items(
-    current_user: Annotated[User, Depends(get_current_active_user)]
-):
-    return [{"item_id": "Foo", "owner": current_user.username}]
+# @app.get("/users/me/items/")
+# async def read_own_items(
+#     current_user: Annotated[User, Depends(get_current_active_user)]
+# ):
+#     return [{"item_id": "Foo", "owner": current_user.username}]
+
+
+user = {
+    "user_id": "1",
+    "username": "username",
+    "usertype": "user",
+    "email": "email@email.com",
+    "disable": False,
+}
+
+
+class Users(users_pb2_grpc.UsersServicer):
+    def AuthenticateUser(self, request, context):
+        return users_pb2.UserAuthenticationReply(user=user)
 
 
 def run():
-    host, port, log_level = config("GATEWAY_ENDPOINT", cast=Csv())
-    uvicorn.run(
-        "server:app", host=host, port=int(port), log_level=log_level, reload=True
-    )
+    port = "50051"
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    users_pb2_grpc.add_UsersServicer_to_server(Users(), server)
+    server.add_insecure_port("[::]:" + port)
+    server.start()
+    server.wait_for_termination()
 
 
 if __name__ == "__main__":
