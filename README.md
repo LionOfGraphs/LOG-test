@@ -8,7 +8,9 @@
 
 ![GitHub top language](https://img.shields.io/github/languages/top/LionOfGraphs/LOG?label=Python&style=flat&logo=Python)
 ![GitHub last commit](https://img.shields.io/github/last-commit/LionOfGraphs/LOG?label=Last%20Commit&style=flat)
-![GitHub](https://img.shields.io/github/license/LionOfGraphs/LOG?label=License&style=flat&color=orange)
+[![GitHub](https://img.shields.io/github/license/LionOfGraphs/LOG?label=License&style=flat&color=orange)](https://www.gnu.org/licenses/gpl-3.0.html)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?label=Code%20Style&color=black)](https://github.com/psf/black)
+
 
 ### Table of Contents
 
@@ -23,7 +25,7 @@
 
 ## Description
 
-The Lion Of Graphs is an application that aims to provide multiple mathematical services. It is mainly focused on the generation of graphs but it also computes equation fitting, ordinary different equation (ODE) solver, and other mathematical features. Users will 
+The Lion Of Graphs is an application that aims to provide multiple mathematical services. It is mainly focused on the generation of graphs but it also computes equation fitting, ordinary different equation (ODE) solver, and other mathematical features. Users will
 
 
 either generate any kind of graphs, that can be highly configurated by the users, . From a given dataset,
