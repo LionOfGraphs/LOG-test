@@ -10,7 +10,7 @@ app = FastAPI()
 
 @app.get("/user/authenticate")
 def authenticate(username, password):
-    with grpc.insecure_channel("localhost:50051") as channel:
+    with grpc.insecure_channel("localhost:" + config("MS2_PORT")) as channel:
         stub = users_pb2_grpc.UsersStub(channel=channel)
         response = stub.AuthenticateUser(
             users_pb2.UserAuthenticationRequest(username=username, password=password)
