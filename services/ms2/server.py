@@ -131,7 +131,7 @@ user = {
     "username": "username",
     "usertype": "user",
     "email": "email@email.com",
-    "disable": False,
+    "disable": True,
 }
 
 
