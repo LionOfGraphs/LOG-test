@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package users;
+
+service Users {
+    rpc AuthenticateUser (UserAuthenticationRequest) returns (UserAuthenticationReply) {}
+}
+
+message User {
+    int32 user_id = 1;
+    string username = 2;
+    string usertype = 3;
+    string full_name = 4;
+    string email = 5;
+    bool disabled = 6;
+}
+
+message UserAuthenticationRequest {
+    string username = 6;
+    string password = 7;
+}
+
+message UserAuthenticationReply {
+    User user = 1;
+}
