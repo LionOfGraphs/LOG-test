@@ -7,15 +7,14 @@ from decouple import config
 from models import UserInDB
 from passlib.context import CryptContext
 
-ALGORITHM = config("ALGORITHM")
-
-
 fake_users_db = {
     "admin": {
+        "user_id": 0,
         "username": "admin",
+        "usertype": "admin",
         "full_name": "Administrator",
         "email": "admin@example.com",
-        "hashed_password": "$2b$12$JsMufKejWZVbopnQ.DksiO/OM4kU.KpQ3p7W6DTp5aQB3Mu.OqESi",
+        "hashed_password": "$2b$12$5WLUvQ5ws7DTuyqbl/0kIOxOtx9My0AqiR61TZH6EAO5CY0nFpEwW",
         "disabled": False,
     }
 }
@@ -120,18 +119,17 @@ def authenticate_user(fake_db, username: str, password: str):
 #     return [{"item_id": "Foo", "owner": current_user.username}]
 
 
-user = {
-    "user_id": "1",
-    "username": "username",
-    "usertype": "user",
-    "email": "email@email.com",
-    "disable": True,
-}
-
-
 class Users(users_pb2_grpc.UsersServicer):
     def AuthenticateUser(self, request, context):
-        return users_pb2.UserAuthenticationReply(user=user)
+        user = authenticate_user(
+            fake_db=fake_users_db, username=request.username, password=request.password
+        )
+        if user:
+            return users_pb2.UserAuthenticationReply(
+                user=user.copy(exclude={"hashed_password"}).dict()
+            )
+        else:
+            return users_pb2.UserAuthenticationReply(user=None)
 
 
 def run():
