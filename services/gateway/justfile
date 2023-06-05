@@ -8,3 +8,9 @@ proto: venv
 
 run: proto
     .\venv\Scripts\python server.py
+
+clean:
+    if exist *_pb2* ( del *_pb2* )
+
+clean-all: clean
+    if exist venv ( )
