@@ -9,7 +9,7 @@ from decouple import config
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt
-from models import Token, User
+from models import Token
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 ALGORITHM = config("ALGORITHM")
@@ -37,9 +37,7 @@ def authenticate_user(username, password):
         response = stub.AuthenticateUser(
             users_pb2.UserAuthenticationRequest(username=username, password=password)
         )
-        print(response)
-        print(User(**response))
-        return response
+        return response.user
 
 
 @app.post("/token", response_model=Token)
@@ -47,14 +45,13 @@ async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ):
     user = authenticate_user(form_data.username, form_data.password)
-    if not user:
+    if not bool(user.username):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    print(type(user))
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
