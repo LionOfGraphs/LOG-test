@@ -22,7 +22,7 @@ message AuthenticateUserRequest {
 }
 
 message AuthenticateUserResponse {
-    bool error = 1;
+    string token = 1;
 }
 
 message GetUserRequest {
