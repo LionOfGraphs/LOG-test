@@ -3,7 +3,8 @@ syntax = "proto3";
 package users;
 
 service Users {
-    rpc AuthenticateUser (UserAuthenticationRequest) returns (UserAuthenticationReply) {}
+    rpc AuthenticateUser (AuthenticateUserRequest) returns (AuthenticateUserResponse) {}
+    rpc GetUser (GetUserRequest) returns (GetUserResponse) {}
 }
 
 message User {
@@ -15,11 +16,19 @@ message User {
     bool disabled = 6;
 }
 
-message UserAuthenticationRequest {
+message AuthenticateUserRequest {
     string username = 6;
     string password = 7;
 }
 
-message UserAuthenticationReply {
+message AuthenticateUserResponse {
+    bool error = 1;
+}
+
+message GetUserRequest {
+    int32 user_id = 1;
+}
+
+message GetUserResponse {
     User user = 1;
 }
