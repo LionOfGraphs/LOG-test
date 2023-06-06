@@ -1,11 +1,17 @@
 from concurrent import futures
+from datetime import datetime, timedelta
 
 import grpc
 import users_pb2
 import users_pb2_grpc
 from decouple import config
+from jose import jwt
 from models import UserInDB
 from passlib.context import CryptContext
+
+ALGORITHM = config("ALGORITHM")
+SECRET_KEY = config("SECRET_KEY")
+ACCESS_TOKEN_EXPIRE_MINUTES = config("ACCESS_TOKEN_EXPIRE_MINUTES", cast=int)
 
 fake_users_db = {
     "admin": {
@@ -43,20 +49,34 @@ def authenticate_user(fake_db, username: str, password: str):
         return False
     if not verify_password(password, user.hashed_password):
         return False
-    return user
+
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.username}, expires_delta=access_token_expires
+    )
+    return access_token
+
+
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
 
 
 class Users(users_pb2_grpc.UsersServicer):
     def AuthenticateUser(self, request, context):
-        user = authenticate_user(
+        access_token = authenticate_user(
             fake_db=fake_users_db, username=request.username, password=request.password
         )
-        if user:
-            return users_pb2.UserAuthenticationReply(
-                user=user.copy(exclude={"hashed_password"}).dict()
-            )
+        if access_token:
+            return users_pb2.AuthenticateUserResponse(token=access_token)
         else:
-            return users_pb2.UserAuthenticationReply(user=None)
+            return users_pb2.AuthenticateUserResponse(token=None)
 
 
 def run():
