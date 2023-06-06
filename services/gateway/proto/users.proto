@@ -7,11 +7,12 @@ service Users {
 }
 
 message User {
-    string user_id = 1;
+    int32 user_id = 1;
     string username = 2;
     string usertype = 3;
-    string email = 4;
-    bool disable = 5;
+    string full_name = 4;
+    string email = 5;
+    bool disabled = 6;
 }
 
 message UserAuthenticationRequest {
