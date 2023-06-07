@@ -1,6 +1,6 @@
 from decouple import config
-from sqlalchemy import Boolean, Column, Integer, String, create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import Boolean, Column, Engine, Integer, String, create_engine
+from sqlalchemy.orm import Session, declarative_base, sessionmaker
 from sqlalchemy_utils import create_database, database_exists
 
 SETTINGS = {
@@ -44,6 +44,10 @@ class User(Base):
 
 
 class DB_Session:
+    """
+    Database Session Object
+    """
+
     def __init__(self) -> None:
         self.user = config("PGUSER")
         self.password = config("PGPASSWORD")
@@ -54,14 +58,14 @@ class DB_Session:
         self.engine = self.get_engine()
         self.session = self.get_session()
 
-    def get_engine(self):
+    def get_engine(self) -> Engine:
         url = f"postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
         if not database_exists(url):
             create_database(url)
         engine = create_engine(url)
         return engine
 
-    def get_session(self):
+    def get_session(self) -> Session:
         Base.metadata.create_all(bind=self.engine, checkfirst=True)
 
         session = sessionmaker(bind=self.engine)()
