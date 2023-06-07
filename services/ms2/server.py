@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import grpc
 import users_pb2
 import users_pb2_grpc
+from database import DB_Session
 from decouple import config
 from jose import jwt
 from models import UserInDB
@@ -13,20 +14,8 @@ ALGORITHM = config("ALGORITHM")
 SECRET_KEY = config("SECRET_KEY")
 ACCESS_TOKEN_EXPIRE_MINUTES = config("ACCESS_TOKEN_EXPIRE_MINUTES", cast=int)
 
-fake_users_db = {
-    "admin": {
-        "user_id": 0,
-        "username": "admin",
-        "usertype": "admin",
-        "full_name": "Administrator",
-        "email": "admin@example.com",
-        "hashed_password": "$2b$12$5WLUvQ5ws7DTuyqbl/0kIOxOtx9My0AqiR61TZH6EAO5CY0nFpEwW",
-        "disabled": False,
-    }
-}
-
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+db_session = DB_Session()
 
 
 def verify_password(plain_password, hashed_password):
@@ -43,16 +32,16 @@ def get_user(db, username: str):
         return UserInDB(**user_dict)
 
 
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
-    if not user:
+def authenticate_user(username: str, password: str):
+    hashed_password = db_session.get_user_hash(username=username)
+    if not hashed_password:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, hashed_password):
         return False
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": username}, expires_delta=access_token_expires
     )
     return access_token
 
@@ -71,7 +60,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 class Users(users_pb2_grpc.UsersServicer):
     def AuthenticateUser(self, request, context):
         access_token = authenticate_user(
-            fake_db=fake_users_db, username=request.username, password=request.password
+            username=request.username, password=request.password
         )
         if access_token:
             return users_pb2.AuthenticateUserResponse(token=access_token)
