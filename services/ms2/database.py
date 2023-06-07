@@ -3,14 +3,6 @@ from sqlalchemy import Boolean, Column, Engine, Integer, String, create_engine
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
 from sqlalchemy_utils import create_database, database_exists
 
-SETTINGS = {
-    "user": config("PGUSER"),
-    "password": config("PGPASSWORD"),
-    "host": config("PGHOST"),
-    "port": config("PGPORT", cast=int),
-    "db": config("PGDB"),
-}
-
 Base = declarative_base()
 
 
@@ -85,14 +77,3 @@ class DB_Session:
             return user.hashed_password
         else:
             return None
-
-
-# user0 = User(user_id=1,
-#              username="admin",
-#              usertype="admin",
-#               fullname="Administrator",
-#              email="admin@log.com",
-#              hashed_password="$2b$12$5WLUvQ5ws7DTuyqbl/0kIOxOtx9My0AqiR61TZH6EAO5CY0nFpEwW",
-#              disabled=False)
-# session.add(user0)
-# session.commit()
