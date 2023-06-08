@@ -77,3 +77,19 @@ class DB_Session:
             return user.hashed_password
         else:
             return None
+
+    def create_user(self, user: User) -> None:
+        self.session.add(user)
+        self.session.commit()
+
+    def delete_user(self, user_id: str) -> None:
+        user = self.session.query(User).filter(User.user_id == user_id).first()
+        if user:
+            self.session.delete(user)
+            self.session.commit()
+
+    def update_user(self, user_id, field, value) -> None:
+        user = self.session.query(User).filter(User.user_id == user_id).first()
+        if user:
+            setattr(user, field, value)
+            self.session.commit()
