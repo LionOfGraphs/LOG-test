@@ -5,6 +5,9 @@ package users;
 service Users {
     rpc AuthenticateUser (AuthenticateUserRequest) returns (AuthenticateUserResponse) {}
     rpc GetUser (GetUserRequest) returns (GetUserResponse) {}
+    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {}
+    rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse) {}
+    rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {}
 }
 
 message User {
@@ -26,9 +29,35 @@ message AuthenticateUserResponse {
 }
 
 message GetUserRequest {
-    int32 user_id = 1;
+    int32 username = 1;
 }
 
 message GetUserResponse {
     User user = 1;
+}
+
+message CreateUserRequest {
+    User user = 1;
+}
+
+message CreateUserResponse {
+    bool error = 1;
+}
+
+message DeleteUserRequest {
+    string username = 1;
+}
+
+message DeleteUserResponse {
+    bool error = 1;
+}
+
+message UpdateUserRequest {
+    string username = 1;
+    string field = 2;
+    string value = 3;
+}
+
+message UpdateUserResponse {
+    bool error = 1;
 }
